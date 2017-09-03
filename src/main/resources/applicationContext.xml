@@ -7,4 +7,12 @@
     <!--启用spring的一些annotation -->
     <context:annotation-config/>
 
+    <!--在 shiro 中用到了 UserService，shiro 是运行在 spring 容器中的， shiro 和 spring-mvc 级别是平行的，
+        所以 spring-mvc 的扫描不起作用，这里再扫描一次，所有的 bean 加载到 spring 容器中-->
+    <context:component-scan base-package="com.sunp.**"></context:component-scan>
+
+    <!--导入 shiro 配置-->
+    <import resource="classpath:shiro.xml"></import>
+
+
 </beans>

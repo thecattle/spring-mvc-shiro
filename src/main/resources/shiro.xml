@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm">
+            <!--自定义 MyRealm，登录的认证入口 ,需要继承AuthorizingRealm，项目中会体现-->
+            <bean class="com.sunp.shiro.MyRealm"></bean>
+        </property>
+
+    </bean>
+
+    <!--shiro 请求拦截器，这里的 bean id 一定要对应 web.xml 中的filter-name，否则找不到这个拦截器-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"></property>
+    </bean>
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 ，不明觉厉，没有深究-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+</beans>
