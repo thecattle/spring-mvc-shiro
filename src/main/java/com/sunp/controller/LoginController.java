@@ -80,4 +80,28 @@ public class LoginController {
         map.put("users", userService.getUserList());
         return map;
     }
+
+    @RequestMapping(value = "/getStatusInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getStatusInfo() {
+        Map<String, Object> map = new HashMap<>();
+        Subject currentUser = SecurityUtils.getSubject();
+
+        map.put("isRemembered", currentUser.isRemembered() ? "session过期了，我是被记住的" : currentUser.isRemembered());
+        map.put("isAuthenticated", currentUser.isAuthenticated() ? "session 还在，我是被认证的" : currentUser.isAuthenticated());
+
+        //登录过，可以看到自己的名字
+        //session 过期的时候，会触发当前判断，前提是登录过的用户设置了token.setRememberMe(true);
+        if (currentUser.isRemembered()){
+            map.put("name", "sunpeng");
+        }
+        //已认证，可以看到手机号
+        if (currentUser.isAuthenticated()){
+            map.put("phone", "xxxxx");
+        }
+        //未登录的情况下，只能看到其他信息
+        map.put("weather", "sunny");
+
+        return map;
+    }
 }

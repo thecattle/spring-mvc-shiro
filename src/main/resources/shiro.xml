@@ -8,6 +8,34 @@
             <bean class="com.sunp.shiro.MyRealm"></bean>
         </property>
 
+        <!--配置 session 管理-->
+        <property name="sessionManager" ref="sessionManager"></property>
+        <!--配置 记住我-->
+        <property name="rememberMeManager" ref="rememberMeManager"></property>
+
+    </bean>
+
+    <!--rememberMeManager管理 配置-->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie">
+            <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+                <!--设置超时时间 单位 秒，一天=86400-->
+                <constructor-arg value="shiro-cookie"></constructor-arg>
+                <property name="maxAge" value="86400"></property>
+                <property name="httpOnly" value="true"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <!--session管理 配置-->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!--session 过期时间 单位 毫秒，2400000=40min-->
+        <property name="globalSessionTimeout" value="2400000"></property>
+
+        <!--有需要可以自行配置-->
+        <!--<property name="cacheManager" ref="xxxx"></property>-->
+        <!--有需要可以自行配置-->
+        <!--<property name="sessionDAO" ref="xxx"></property>-->
     </bean>
 
     <!--shiro 请求拦截器，这里的 bean id 一定要对应 web.xml 中的filter-name，否则找不到这个拦截器-->
