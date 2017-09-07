@@ -5,7 +5,19 @@
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm">
             <!--自定义 MyRealm，登录的认证入口 ,需要继承AuthorizingRealm，项目中会体现-->
-            <bean class="com.sunp.shiro.MyRealm"></bean>
+            <bean class="com.sunp.shiro.MyRealm">
+                <!-- 配置密码匹配器 -->
+                <property name="credentialsMatcher">
+                    <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                        <!-- 加密算法为SHA-256 -->
+                        <property name="hashAlgorithmName" value="SHA-256"></property>
+                        <!-- 加密迭代次数 -->
+                        <property name="hashIterations" value="1024"></property>
+                        <!--是否存储散列后的密码为16进制，为 true：.toHex()，为 false：.toBase64()-->
+                        <property name="storedCredentialsHexEncoded" value="false"></property>
+                    </bean>
+                </property>
+            </bean>
         </property>
 
         <!--配置 session 管理-->

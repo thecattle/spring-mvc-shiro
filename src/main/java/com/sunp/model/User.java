@@ -13,17 +13,27 @@ public class User implements Serializable{
 
     public User() {}
 
-    public User(String userId, String userName, String userPassword, String userRemark) {
+    public User(String userId, String userName, String userPassword, String salt, String userRemark) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
+        this.salt = salt;
         this.userRemark = userRemark;
     }
 
     private String userId;
     private String userName;
     private String userPassword;
+    private String salt;
     private String userRemark;
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     public String getUserId() {
         return userId;
