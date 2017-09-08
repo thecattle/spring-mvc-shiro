@@ -3,29 +3,53 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm">
-            <!--自定义 MyRealm，登录的认证入口 ,需要继承AuthorizingRealm，项目中会体现-->
-            <bean class="com.sunp.shiro.MyRealm">
-                <!-- 配置密码匹配器 -->
-                <property name="credentialsMatcher">
-                    <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
-                        <!-- 加密算法为SHA-256 -->
-                        <property name="hashAlgorithmName" value="SHA-256"></property>
-                        <!-- 加密迭代次数 -->
-                        <property name="hashIterations" value="1024"></property>
-                        <!--是否存储散列后的密码为16进制，为 true：.toHex()，为 false：.toBase64()-->
-                        <property name="storedCredentialsHexEncoded" value="false"></property>
-                    </bean>
-                </property>
-            </bean>
-        </property>
-
         <!--配置 session 管理-->
         <property name="sessionManager" ref="sessionManager"></property>
         <!--配置 记住我-->
         <property name="rememberMeManager" ref="rememberMeManager"></property>
+        <!-- 配置多个Realm的登录认证 -->
+        <property name="authenticator" ref="authenticator"></property>
 
     </bean>
+
+    <!-- 配置多个Realm -->
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+
+        <!--验证的时候，是用迭代器，所以可以认为验证的顺序就是这个 list 的顺序-->
+        <property name="realms">
+            <list>
+                <ref bean="otherRealm"/>
+                <ref bean="myRealm"/>
+            </list>
+        </property>
+        <property name="authenticationStrategy">
+
+            <!--所有 realm 认证通过才算登录成功-->
+            <!--<bean id="authenticationStrategy" class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"/>-->
+            <!--验证某个 realm 成功后直接返回，不会验证后面的 realm 了-->
+            <!--<bean id="authenticationStrategy" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>-->
+            <!--所有的 realm 都会验证，其中一个成功，也会继续验证后面的 realm，最后返回成功-->
+            <bean id="authenticationStrategy" class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"/>
+        </property>
+    </bean>
+
+    <!--自定义 MyRealm，登录的认证入口 ,需要继承AuthorizingRealm，项目中会体现-->
+    <bean id="myRealm" class="com.sunp.shiro.MyRealm">
+        <!-- 配置密码匹配器 -->
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <!-- 加密算法为SHA-256 -->
+                <property name="hashAlgorithmName" value="SHA-256"></property>
+                <!-- 加密迭代次数 -->
+                <property name="hashIterations" value="1024"></property>
+                <!--是否存储散列后的密码为16进制，为 true：.toHex()，为 false：.toBase64()-->
+                <property name="storedCredentialsHexEncoded" value="false"></property>
+            </bean>
+        </property>
+    </bean>
+    <!--自定义的第二个 realm-->
+    <bean id="otherRealm" class="com.sunp.shiro.OtherRealm"></bean>
+
 
     <!--rememberMeManager管理 配置-->
     <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
