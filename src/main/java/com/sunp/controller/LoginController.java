@@ -66,7 +66,7 @@ public class LoginController {
         } catch (ExcessiveAttemptsException eae) {
             map.put("msg", "登录失败次数过多");
         } catch (AuthenticationException ae) {
-            map.put("msg", "ae.getMessage()");
+            map.put("msg", ae.getMessage());
         }
 
         return map;
@@ -101,6 +101,15 @@ public class LoginController {
         }
         //未登录的情况下，只能看到其他信息
         map.put("weather", "sunny");
+
+        return map;
+    }
+
+    @RequestMapping(value = "/unAuthorized", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> unAuthorized() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", "您没有权限访问");
 
         return map;
     }

@@ -9,7 +9,20 @@
         <property name="rememberMeManager" ref="rememberMeManager"></property>
         <!-- 配置多个Realm的登录认证 -->
         <property name="authenticator" ref="authenticator"></property>
+        <!-- 配置多个Realm的权限认证 -->
+        <property name="authorizer" ref="authorizer"></property>
+    </bean>
 
+    <!--配置多个 realm 的权限权限认证-->
+    <bean id="authorizer" class="org.apache.shiro.authz.ModularRealmAuthorizer">
+        <property name="realms">
+            <list>
+                <!--这个实现权限匹配的方法-->
+                <ref bean="myRealm"/>
+                <!--这个没有实现-->
+                <!--<ref bean="otherRealm"/>-->
+            </list>
+        </property>
     </bean>
 
     <!-- 配置多个Realm -->
@@ -77,6 +90,20 @@
     <!--shiro 请求拦截器，这里的 bean id 一定要对应 web.xml 中的filter-name，否则找不到这个拦截器-->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"></property>
+        <!--登录地址-->
+        <property name="loginUrl" value="/user/login"></property>
+        <!--登录成功跳转的地址-->
+        <property name="successUrl" value="/user/getStatusInfo"></property>
+        <!--权限认证失败跳转的地址-->
+        <property name="unauthorizedUrl" value="/user/unAuthorized"></property>
+        <!--需要权限拦截的路径-->
+        <property name="filterChainDefinitions">
+            <value>
+                /user/login** = anon
+                /admin/** = authc,roles[admin],perms[admin:info]
+                /super/** = authc,roles[super],perms[super:info]
+            </value>
+        </property>
     </bean>
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 ，不明觉厉，没有深究-->

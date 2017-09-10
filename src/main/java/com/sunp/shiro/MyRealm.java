@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -17,8 +18,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MyRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        String username =(String) super.getAvailablePrincipal(principalCollection);
+        SimpleAuthorizationInfo info =new SimpleAuthorizationInfo();
+        //根据用户名获取当前用户
+        User userInfo = userService.getUserInfo(username);
+        //当用户存在的时候进入判断
+        if (userInfo!=null){
+            //添加当前用户的角色
+            info.addRoles(userInfo.getRoles());
+            //添加当前用户的权限
+            info.addStringPermissions(userInfo.getPermissions());
+            return info;
+        }
         return null;
     }
 

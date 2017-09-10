@@ -27,14 +27,30 @@ public class UserDaoImpl implements UserDao {
      */
     static {
         users=new ArrayList<>();
+        List<String> adminPermissions=new ArrayList<>();
+        adminPermissions.add("admin:info");
+
+        List<String> superPermissions=new ArrayList<>();
+        superPermissions.add("super:info");
+
+        List<String> adminRoles=new ArrayList<>();
+        adminRoles.add("admin");
+
+        List<String> superRoles=new ArrayList<>();
+        superRoles.add("super");
+
         User user1=new User("1",
                 "admin",
+                adminRoles,
+                adminPermissions,
                 "qWdiGI6l8lHjpCXOSrEWOD4UX2gguGTim3hqJVe6nOc=",
                 "9Se1CbOxZNFC7a9PaiKZCQ==",
                 "管理员");
 
         User user2=new User("2",
                 "super",
+                superRoles,
+                superPermissions,
                 "password",
                 "",
                 "超级管理员");

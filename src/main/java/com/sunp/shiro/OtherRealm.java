@@ -50,7 +50,7 @@ public class OtherRealm extends AuthorizingRealm {
                     userDao.getUserPassword(),
                     this.getName());
 
-
+            return authcInfo;
         }
         return null;
     }

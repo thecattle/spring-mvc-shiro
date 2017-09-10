@@ -1,6 +1,7 @@
 package com.sunp.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,9 +14,11 @@ public class User implements Serializable{
 
     public User() {}
 
-    public User(String userId, String userName, String userPassword, String salt, String userRemark) {
+    public User(String userId, String userName, List<String> roles, List<String> permissions, String userPassword, String salt, String userRemark) {
         this.userId = userId;
         this.userName = userName;
+        this.roles = roles;
+        this.permissions = permissions;
         this.userPassword = userPassword;
         this.salt = salt;
         this.userRemark = userRemark;
@@ -23,9 +26,27 @@ public class User implements Serializable{
 
     private String userId;
     private String userName;
+    private List<String> roles;
+    private List<String> permissions;
     private String userPassword;
     private String salt;
     private String userRemark;
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public List<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<String> permissions) {
+        this.permissions = permissions;
+    }
 
     public String getSalt() {
         return salt;
